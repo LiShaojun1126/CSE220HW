@@ -1,7 +1,8 @@
 #include "MyIntegers.h"
 #include <stdio.h>
 #include <stdbool.h>
-
+//Shaojun Li 117646117
+#define sign_mask 0x80000000
 void repr_convert(char source_repr, char target_repr, unsigned int repr) {
 
    /*
@@ -11,5 +12,41 @@ void repr_convert(char source_repr, char target_repr, unsigned int repr) {
     * 3. Convert to target representation
     * 4. Print the result or error message
     */
+   //range of 32bit sign/magnitude : [-(2 ^ 31 - 1), (2 ^ 31) - 1]
+   //range of 2's complement: [-2 ^ 31, 2 ^ 31 - 1]
+   // therefore -2^31 cannot be represented in sign/magnitude
+   if (source_repr == '2' && repr == 0x80000000){ //0x80000000 = 1000 0000 0000 0000 0000 0000 0000 0000 = -2^31 in two's complement
+       printf("undefined\n");
+       return;
+   }
+   if (source_repr != 'S' && source_repr != '2' || target_repr != 'S' && target_repr != '2'){
+       printf("error\n");
+       return;
+   }
 
+   //when the source repre is the same as target repr, we don't need to do anything
+   if (source_repr == target_repr) return;
+
+   if (source_repr == 'S'){
+       int s_sign = repr & sign_mask;
+       if(s_sign){ //negative
+           repr &= 0x7FFFFFFF;
+           repr ^= 0x7FFFFFFF;
+           repr += 1;
+           repr |= s_sign;
+
+           printf("%x", repr);
+       }
+       //positive
+   }
+
+   if (source_repr == '2'){
+
+   }
+}
+
+//test, to delete:
+int main(){
+    repr_convert('S', '2', 0x80000001 );
+    return 0;
 }
