@@ -37,7 +37,7 @@ float construct_float_sf(char sign_bit, char exponent, unsigned int fraction) {
 }
 
 int main(){
-    printf("%f", construct_float_sf(0x00, 0x7F3, 0x200000));
+    printf("%f", construct_float_sf(0x00, 0x7F, 0x200000));
 
     return 0;
 }
