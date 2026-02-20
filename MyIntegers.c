@@ -15,7 +15,7 @@ void repr_convert(char source_repr, char target_repr, unsigned int repr) {
    //range of 32bit sign/magnitude : [-(2 ^ 31 - 1), (2 ^ 31) - 1]
    //range of 2's complement: [-2 ^ 31, 2 ^ 31 - 1]
    // therefore -2^31 cannot be represented in sign/magnitude
-   if (source_repr == '2' && repr == 0x80000000){ //0x80000000 = 1000 0000 0000 0000 0000 0000 0000 0000 = -2^31 in two's complement
+   if (source_repr == '2' && target_repr == 'S' &&repr == 0x80000000){ //0x80000000 = 1000 0000 0000 0000 0000 0000 0000 0000 = -2^31 in two's complement
        printf("undefined\n");
        return;
    }
@@ -25,28 +25,53 @@ void repr_convert(char source_repr, char target_repr, unsigned int repr) {
    }
 
    //when the source repre is the same as target repr, we don't need to do anything
-   if (source_repr == target_repr) return;
+   if (source_repr == target_repr){
+       printf("%x\n", repr);
+       return;
+   }
 
    if (source_repr == 'S'){
+       if(repr == 0x80000000) { //handling -0
+           printf("0000000\n"); return;
+       }
        int s_sign = repr & sign_mask;
+       printf("current sign is: %x\n",s_sign);
        if(s_sign){ //negative
            repr &= 0x7FFFFFFF;
            repr ^= 0x7FFFFFFF;
            repr += 1;
            repr |= s_sign;
 
-           printf("%x", repr);
+           printf("%x\n", repr);
+           return;
        }
+
+
        //positive
+        printf("%x\n",repr);
+        return;
    }
 
    if (source_repr == '2'){
+       int two_sign = repr & sign_mask;
+       printf("current sign is: %x\n", two_sign);
 
+       if(two_sign){
+           repr --;
+           repr ^= 0x7FFFFFFF; //invert
+           repr |= two_sign;
+
+           printf("%x\n", repr);
+           return;
+       }
+
+       printf("%x\n", repr);
+       return;
    }
 }
 
 //test, to delete:
 int main(){
-    repr_convert('S', '2', 0x80000001 );
+    repr_convert('2', 'S', 0x80000000 );
     return 0;
 }
