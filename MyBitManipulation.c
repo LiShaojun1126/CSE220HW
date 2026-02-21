@@ -94,7 +94,7 @@ int SwapOddEvenBits(int num) {
    uint32_t mask_even_bits = 0xAAAAAAAA;
    uint32_t mask_odd_bits = 0x55555555;
 
-   uint32_t even_bits = num & mask_even_bits, odd_bits = num & mask_odd_bits;
+   uint32_t even_bits = u_num & mask_even_bits, odd_bits = u_num & mask_odd_bits;
    even_bits >>= 1;
    odd_bits <<= 1;
 
