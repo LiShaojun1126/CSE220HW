@@ -18,6 +18,8 @@ Test(ToggleBit, examples) {
    cr_assert_eq(ToggleBit(0, 31), 0x80000000);
    cr_assert_eq(ToggleBit(-1, 31), 0x7FFFFFFF);
    cr_assert_eq(ToggleBit(-1, 0), -2);
+   cr_assert_eq(ToggleBit(-1, 32), -1);
+   cr_assert_eq(ToggleBit(-1, -3), -1);
 
 }
 
