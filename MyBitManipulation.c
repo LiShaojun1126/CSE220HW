@@ -10,7 +10,7 @@ int ToggleBit(int num, int pos) {
    /* TODO: implement */
    // to avoid expections
    if (pos < 0 || pos > 31){
-       printf("Your position %d is invalid, the number stays the same, please re-enter!\n", pos);
+       //printf("Your position %d is invalid, the number stays the same, please re-enter!\n", pos);
        return num;
    }
    //we need a mask here
@@ -36,7 +36,7 @@ int GetMSB(int num) {
        num >>= 1;
        result ++;
    }
-   return result - 1; //result is the index of the position, while result is the nth postion(starts with 1)
+   return result; //result is the index of the position, while result is the nth postion(starts with 1)
 }
 
 /*
@@ -45,7 +45,7 @@ int GetMSB(int num) {
 int ClearBitRange(int num, int start, int end) { //also use XOR， XOR itself
    /* TODO: implement */
    if(start < 0 || end > 31 || end < start) {
-       printf("The start or the end is invalid, please re-enter.\n");
+       //printf("The start or the end is invalid, please re-enter.\n");
        return num;
    }
 
@@ -77,6 +77,9 @@ uint32_t RotateLeft(uint32_t num, int d) {
    // uint32_t leftside = num << d;
    // uint32_t rightside = num >> (32 - d);
 
+   //to prevent undefined behavior:
+   if (d == 0) return num;
+
    return num << d | num >> (32 - d);
 }
 
@@ -85,25 +88,26 @@ uint32_t RotateLeft(uint32_t num, int d) {
 */
 int SwapOddEvenBits(int num) {
    /* TODO: implement */
-
+   //convert to unsigned:
+   uint32_t u_num = (uint32_t)num;
    //create mask:
-   int mask_even_bits = 0xAAAAAAAA;
-   int mask_odd_bits = 0x55555555;
+   uint32_t mask_even_bits = 0xAAAAAAAA;
+   uint32_t mask_odd_bits = 0x55555555;
 
-   int even_bits = num & mask_even_bits, odd_bits = num & mask_odd_bits;
+   uint32_t even_bits = num & mask_even_bits, odd_bits = num & mask_odd_bits;
    even_bits >>= 1;
    odd_bits <<= 1;
 
-
+   //implicitly convert back
    return even_bits | odd_bits;
 }
 
-//To Delete finally:
+// //To Delete finally:
 
-int main(){
-    printf("%d\n", ToggleBit(-1, 31));
-    printf("%d\n",ClearBitRange(73,1,3));
-    printf("%u\n", RotateLeft(2147483647, 1));
-    printf("%d", SwapOddEvenBits(-4));
-    return 0;
-}
+// int main(){
+//     printf("%d\n", ToggleBit(-1, 31));
+//     printf("%d\n",ClearBitRange(73,1,3));
+//     printf("%u\n", RotateLeft(2147483647, 1));
+//     printf("%d", SwapOddEvenBits(-4));
+//     return 0;
+// }

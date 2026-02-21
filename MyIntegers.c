@@ -45,8 +45,6 @@ void repr_convert(char source_repr, char target_repr, unsigned int repr) {
            printf("%x\n", repr);
            return;
        }
-
-
        //positive
         printf("%x\n",repr);
         return;
@@ -71,7 +69,11 @@ void repr_convert(char source_repr, char target_repr, unsigned int repr) {
 }
 
 //test, to delete:
-int main(){
-    repr_convert('2', 'S', 0x80000000 );
-    return 0;
-}
+// int main(){
+//     repr_convert('S', '2', 0x80000001);
+//     repr_convert('S', '2', 0x80000000);
+//     repr_convert('2', '2', 0x59f2ca50);
+//     repr_convert('F', '2', 0x00394812);
+//     repr_convert('2', 'S', 0x80000000);
+//     return 0;
+// }
