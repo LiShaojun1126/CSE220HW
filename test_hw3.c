@@ -93,6 +93,83 @@ Test(ConstructFloat, positive_examples) {
 Test(ConstructFloat, negative_examples) {
    float f = construct_float_sf(0x01, 0x7F, 0x200000);
    cr_assert_float_eq(f, -1.25, 0.00001);
+
+}
+
+//below is my test
+Test(ConstructFloat, zero_example) {
+    // sign=0, exp=0, frac=0
+    float f = construct_float_sf(0x00, 0x00, 0x000000);
+    cr_assert_float_eq(f, 0.0, 0.00001);
+}
+Test(ConstructFloat, one_example) {
+    float f = construct_float_sf(0x00, 0x7F, 0x000000);
+    cr_assert_float_eq(f, 1.0, 0.00001);
+}
+
+Test(ConstructFloat, negative_one_example) {
+    float f = construct_float_sf(0x01, 0x7F, 0x000000);
+    cr_assert_float_eq(f, -1.0, 0.00001);
+}
+
+Test(ConstructFloat, fractional_example) {
+    float f = construct_float_sf(0x00, 0x7F, 0x400000);
+    cr_assert_float_eq(f, 1.5, 0.00001);
+}
+Test(ConstructFloat, two_example) {
+    float f = construct_float_sf(0x00, 0x80, 0x000000);
+    cr_assert_float_eq(f, 2.0, 0.00001);
+}
+
+Test(ConstructFloat, pos_5_5) {
+    float f = construct_float_sf(0x00, 0x81, 0x300000);
+    cr_assert_float_eq(f, 5.5, 0.00001);
+}
+
+Test(ConstructFloat, neg_5_5) {
+    float f = construct_float_sf(0x01, 0x81, 0x300000);
+    cr_assert_float_eq(f, -5.5, 0.00001);
+}
+
+Test(ConstructFloat, pos_1_25) {
+    float f = construct_float_sf(0x00, 0x7F, 0x200000);
+    cr_assert_float_eq(f, 1.25, 0.00001);
+}
+
+Test(ConstructFloat, neg_1_25) {
+    float f = construct_float_sf(0x01, 0x7F, 0x200000);
+    cr_assert_float_eq(f, -1.25, 0.00001);
+}
+
+Test(ConstructFloat, pos_small_fraction) {
+    float f = construct_float_sf(0x00, 0x76, 0x299B6F);
+    cr_assert_float_eq(f, 0.002588, 0.000001);
+}
+
+Test(ConstructFloat, neg_small_fraction) {
+    float f = construct_float_sf(0x01, 0x76, 0x299B6F);
+    cr_assert_float_eq(f, -0.002588, 0.000001);
+}
+
+//this will lose a lot precesion
+Test(ConstructFloat, pos_1374_435425) {
+    float f = construct_float_sf(0x00, 0x89, 0xABCDEF);
+    cr_assert_float_eq(f, 1374.44, 0.01);
+}
+
+Test(ConstructFloat, neg_1374_435425) {
+    float f = construct_float_sf(0x01, 0x89, 0xABCDEF);
+    cr_assert_float_eq(f, -1374.44, 0.01);
+}
+
+Test(ConstructFloat, pos_255439) {
+    float f = construct_float_sf(0x00, 0x90, 0x7973C0);
+    cr_assert_float_eq(f, 255439.0, 0.00001);
+}
+
+Test(ConstructFloat, neg_255439) {
+    float f = construct_float_sf(0x01, 0x90, 0x7973C0);
+    cr_assert_float_eq(f, -255439.0, 0.00001);
 }
 
 /* =========================
@@ -110,4 +187,23 @@ Test(ReprConvert, basic_run) {
    repr_convert('S', '2', 0x80000001);
    repr_convert('F', '2', 0x00394812);
    repr_convert('2', 'S', 0x80000000);
+   //below is the test I wrote
+   //negative
+   repr_convert('2', 'S', 0xFFFFFFFF); //Expected: 80000001
+
+   repr_convert('2', 'S', 0xFFFFFFFB); //Expected: 80000005
+   repr_convert('S', '2', 0x80000005);//Expected: fffffffb
+
+   //0s
+   repr_convert('S', '2', 0x00000000); //Expected: 00000000
+   repr_convert('2', 'S', 0x00000000); //Expected: 00000000
+   repr_convert('S', 'S', 0x00000000); //Expected: 00000000
+
+   // max integer
+   repr_convert('S', '2', 0x7FFFFFFF); //Expected: 7fffffff
+   repr_convert('2', 'S', 0x7FFFFFFF); //Expected: 7fffffff
+
+   //wrong input
+   repr_convert('2', 'Q', 0x12345678); //Expected: error
+   repr_convert('X', 'Y', 0x12345678); //Expected: error
 }

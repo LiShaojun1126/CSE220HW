@@ -19,51 +19,49 @@ void repr_convert(char source_repr, char target_repr, unsigned int repr) {
        printf("undefined\n");
        return;
    }
-   if (source_repr != 'S' && source_repr != '2' || target_repr != 'S' && target_repr != '2'){
+   if ((source_repr != 'S' && source_repr != '2') || (target_repr != 'S' && target_repr != '2')){
        printf("error\n");
        return;
    }
 
    //when the source repre is the same as target repr, we don't need to do anything
    if (source_repr == target_repr){
-       printf("%x\n", repr);
+       if (target_repr == 'S' && repr == 0x80000000) { //special case
+            printf("00000000\n"); // +0
+        }
+       printf("%08x\n", repr); //to ensure is 32bits
        return;
    }
 
-   if (source_repr == 'S'){
+   if (source_repr == 'S' && target_repr == '2'){
        if(repr == 0x80000000) { //handling -0
-           printf("0000000\n"); return;
+           printf("00000000\n"); return;
        }
-       int s_sign = repr & sign_mask;
-       printf("current sign is: %x\n",s_sign);
+       unsigned int s_sign = repr & sign_mask;
+       //printf("current sign is: %x\n",s_sign);
        if(s_sign){ //negative
-           repr &= 0x7FFFFFFF;
-           repr ^= 0x7FFFFFFF;
-           repr += 1;
-           repr |= s_sign;
+           unsigned int abs_repr = repr & 0x7FFFFFFF; //get abs value
+           unsigned int result_to_two = ~(abs_repr) + 1;
 
-           printf("%x\n", repr);
+           printf("%08x\n", result_to_two);
            return;
        }
-       //positive
-        printf("%x\n",repr);
+        printf("%08x\n",repr);       //positive which is the same as two's complement
         return;
    }
 
-   if (source_repr == '2'){
-       int two_sign = repr & sign_mask;
-       printf("current sign is: %x\n", two_sign);
-
+   if (source_repr == '2' && target_repr == 'S'){
+       unsigned int two_sign = repr & sign_mask;
+       //printf("current sign is: %x\n", two_sign);
        if(two_sign){
-           repr --;
-           repr ^= 0x7FFFFFFF; //invert
-           repr |= two_sign;
+           unsigned int result_to_S = ~(repr - 1);
 
-           printf("%x\n", repr);
+           result_to_S |= two_sign;  //we need to add the sign back here
+
+           printf("%08x\n", result_to_S);
            return;
        }
-
-       printf("%x\n", repr);
+       printf("%08x\n", repr);//positive
        return;
    }
 }
