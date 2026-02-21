@@ -1,7 +1,7 @@
 #include "MyIntegers.h"
 #include <stdio.h>
 #include <stdbool.h>
-//Shaojun Li 117646117
+//Name: Shaojun Li SBUID: 117646117
 #define sign_mask 0x80000000
 void repr_convert(char source_repr, char target_repr, unsigned int repr) {
 

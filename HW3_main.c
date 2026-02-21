@@ -2,7 +2,7 @@
 #include "MyBitManipulation.h"
 #include "Myfloat.h"
 #include "MyIntegers.h"
-
+//Name: Shaojun Li SBUID: 117646117
 int main(void) {
 
    /* PART 1: Bit Manipulation Tests */
